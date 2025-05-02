@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'form_page.dart';
 import 'converter_page.dart';
-
+import 'listview_page.dart';
+import 'gridview_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,39 +14,40 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedItem = 0;
 
-  final _widgetOptions = [
+  final List<Widget> _widgetOptions = [
     FormPage(),
     ConverterPage(),
     ListviewPage(),
+    GridviewPage(),
   ];
 
-  mySnackBar(msg, context) {
-    return ScaffoldMessenger.of(context).showSnackBar(
+  void mySnackBar(String msg, BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(msg)),
     );
   }
 
-  myAlertDialog(context) {
-    return showDialog(
+  void myAlertDialog(BuildContext context) {
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Hello!!!"),
-          content: Text("Do you want to delete?"),
+          title: const Text("Hello!!!"),
+          content: const Text("Do you want to delete?"),
           actions: [
             TextButton(
               onPressed: () {
                 mySnackBar("Successful!!", context);
                 Navigator.of(context).pop();
               },
-              child: Text("Yes"),
+              child: const Text("Yes"),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("No"),
-            )
+              child: const Text("No"),
+            ),
           ],
         );
       },
@@ -57,54 +60,78 @@ class _HomePageState extends State<HomePage> {
       drawer: Drawer(
         child: ListView(
           children: [
-            DrawerHeader(
-              padding: EdgeInsets.zero,
+            const DrawerHeader(
+              padding: EdgeInsets.all(0),
               child: UserAccountsDrawerHeader(
-                decoration: BoxDecoration(color: Colors.blueGrey),
-                accountName: Text("Name"),
-                accountEmail: Text("Email"),
-                currentAccountPicture: Image.asset("assets/images/flutter.png"),
-                currentAccountPictureSize: Size.square(50),
+                decoration: BoxDecoration(color: Colors.deepPurple),
+                accountName: Text("Your Name"),
+                accountEmail: Text("your.email@example.com"),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: AssetImage("assets/images/flutter.png"),
+                ),
               ),
             ),
             ListTile(
-              leading: Icon(Icons.home),
-              title: Text("Home"),
+              leading: const Icon(Icons.home),
+              title: const Text("Form"),
               onTap: () {
-                Navigator.pop(context); // Just close the drawer
+                setState(() {
+                  _selectedItem = 0;
+                });
+                Navigator.of(context).pop();
               },
             ),
             ListTile(
-              leading: Icon(Icons.swap_horiz),
-              title: Text("Converter"),
+              leading: const Icon(Icons.swap_horiz),
+              title: const Text("Converter"),
               onTap: () {
                 setState(() {
                   _selectedItem = 1;
                 });
-                Navigator.pop(context);
+                Navigator.of(context).pop();
               },
             ),
             ListTile(
-              leading: Icon(Icons.person),
-              title: Text("Profile"),
+              leading: const Icon(Icons.list),
+              title: const Text("List View"),
               onTap: () {
                 setState(() {
                   _selectedItem = 2;
                 });
-                Navigator.pop(context);
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.grid_view),
+              title: const Text("Grid View"),
+              onTap: () {
+                setState(() {
+                  _selectedItem = 3;
+                });
+                Navigator.of(context).pop();
               },
             ),
           ],
         ),
       ),
+      appBar: AppBar(
+        title: const Text(
+          "Currency Converter App",
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.deepPurple,
+      ),
       body: _widgetOptions[_selectedItem],
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.blueGrey,
+        selectedItemColor: Colors.deepPurple,
+        unselectedItemColor: Colors.grey,
         currentIndex: _selectedItem,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.message), label: "Converter"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Form"),
+          BottomNavigationBarItem(icon: Icon(Icons.swap_horiz), label: "Converter"),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: "List"),
+          BottomNavigationBarItem(icon: Icon(Icons.grid_view), label: "Grid"),
         ],
         onTap: (int index) {
           setState(() {
@@ -113,22 +140,5 @@ class _HomePageState extends State<HomePage> {
         },
       ),
     );
-  }
-}
-class FormPage extends StatelessWidget {
-  const FormPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text("Form Page"));
-  }
-}
-
-class ListviewPage extends StatelessWidget {
-  const ListviewPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text("ListView Page"));
   }
 }
